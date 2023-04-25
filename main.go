@@ -18,11 +18,11 @@ func main() {
 }
 
 type Pipeline struct {
-	name                        string
-	status                      string
-	lastModifiedTime            time.Time
-	lastPipelineExecutionStatus string
-	lastPipelineExecutionTime   time.Time
+	name                           string
+	status                         string
+	lastModifiedTime               time.Time
+	lastPipelineExecutionStatus    string
+	lastPipelineExecutionStartTime time.Time
 }
 
 func GetPipelines() (*[]Pipeline, error) {
@@ -78,7 +78,7 @@ func GetPipelines() (*[]Pipeline, error) {
 		if len(pipelineExecutionSummaries) > 0 {
 			pipelineExecutionSummary := listPipelineExecutionsOutput.PipelineExecutionSummaries[0]
 			pipeline.lastPipelineExecutionStatus = *pipelineExecutionSummary.PipelineExecutionStatus
-			pipeline.lastPipelineExecutionTime = pipelineExecutionSummary.StartTime.Local()
+			pipeline.lastPipelineExecutionStartTime = pipelineExecutionSummary.StartTime.Local()
 		}
 
 		pipelines = append(pipelines, pipeline)
@@ -96,7 +96,7 @@ func invoke() error {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 
-	t.AppendHeader(table.Row{"Name", "PipelineStatus", "LastModifiedTime", "lastPipelineExecutionTime", "ExecutionStatus"})
+	t.AppendHeader(table.Row{"Name", "Status", "Last ModifiedTime", "Last Execution Start Time", "Execution Status"})
 
 	rows := []table.Row{}
 
@@ -112,7 +112,7 @@ func invoke() error {
 		} else {
 			executionStatus = pipeline.lastPipelineExecutionStatus
 		}
-		rows = append(rows, table.Row{pipeline.name, pipeline.status, pipeline.lastModifiedTime, pipeline.lastPipelineExecutionTime, executionStatus})
+		rows = append(rows, table.Row{pipeline.name, pipeline.status, pipeline.lastModifiedTime, pipeline.lastPipelineExecutionStartTime, executionStatus})
 	}
 
 	t.AppendRows(rows)
