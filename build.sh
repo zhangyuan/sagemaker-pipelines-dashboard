@@ -2,8 +2,16 @@
 
 set -euo pipefail
 
-GOOS=windows GOARCH=amd64 go build -o bin/sagemaker-pipelines-dashboard-amd64.exe
-GOOS=windows GOARCH=386 go build -o bin/sagemaker-pipelines-dashboard-386.exe
-GOOS=darwin GOARCH=amd64 go build -o bin/sagemaker-pipelines-dashboard-amd64-darwin
-GOOS=linux GOARCH=amd6 go build -o bin/sagemaker-pipelines-dashboard-amd64-linux
-GOOS=linux GOARCH=386 go build -o bin/sagemaker-pipelines-dashboard-386-linux
+BINARY_NAME=sagemaker-pipelines-dashboard
+
+rm -rf bin/${BINARY_NAME}*
+
+GOOS=windows GOARCH=amd64 go build -o bin/${BINARY_NAME}-amd64.exe
+
+GOOS=windows GOARCH=386 go build -o bin/${BINARY_NAME}-386.exe
+
+GOOS=darwin GOARCH=amd64 go build -o bin/${BINARY_NAME}-amd64-darwin
+
+GOOS=linux GOARCH=amd64 go build -o bin/${BINARY_NAME}-amd64-linux
+
+GOOS=linux GOARCH=386 go build -o bin/${BINARY_NAME}-386-linux
