@@ -17,14 +17,14 @@ func main() {
 	}
 }
 
-type Pipelines struct {
+type Pipeline struct {
 	name                        string
 	status                      string
-	lastModifiedTime            *time.Time
+	lastModifiedTime            time.Time
 	lastPipelineExecutionStatus string
 }
 
-func GetPipelines() (*[]Pipelines, error) {
+func GetPipelines() (*[]Pipeline, error) {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
@@ -35,7 +35,7 @@ func GetPipelines() (*[]Pipelines, error) {
 		return nil, err
 	}
 
-	pipelines := []Pipelines{}
+	pipelines := []Pipeline{}
 
 	for _, pipline := range listPipelinesOutput.PipelineSummaries {
 		name := pipline.PipelineName
@@ -50,10 +50,10 @@ func GetPipelines() (*[]Pipelines, error) {
 		pipelineName := *output.PipelineName
 		pipelineStatus := *output.PipelineStatus
 
-		pipeline := Pipelines{
+		pipeline := Pipeline{
 			name:             pipelineName,
 			status:           pipelineStatus,
-			lastModifiedTime: output.LastModifiedTime,
+			lastModifiedTime: output.LastModifiedTime.Local(),
 		}
 
 		sortBy := "CreationTime"
